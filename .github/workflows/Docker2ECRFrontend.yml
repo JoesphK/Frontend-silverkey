@@ -1,0 +1,40 @@
+name: Lint
+on:
+  workflow_dispatch:
+  push:
+  
+    branches:
+      - 'master' 
+      - 'feature-**'
+  pull_request:
+    branches:
+      - 'master' 
+      - 'feature-**' 
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Lint Prettier
+        run: npm run prettier
+        continue-on-error: false
+
+      - name: Lint ESLint
+        run: npm run eslint
+        continue-on-error: true
